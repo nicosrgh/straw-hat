@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  s-straw-hat-worker:
+    image: gcr.io/staging-256810/s-angelica-worker:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/app.docker
+    env_file: .env
+    container_name: "s-straw-hat-worker"
+    working_dir: /usr/src/app
+    ports:
+      - "50050:50050"

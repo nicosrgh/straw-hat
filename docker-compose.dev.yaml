@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  d-straw-hat:
+    container_name: "d-straw-hat"
+    image: gcr.io/straw-hat/d-straw-hat:latest
+    build:
+      context: .
+      dockerfile: ./dockerfiles/app.docker.dev
+    env_file: .env
+    ports:
+      - "50050:50050"
+    volumes:
+        - .:/usr/src/app
+    networks:
+      - default
+      - bridge-network
+networks:
+  default:
+    driver: bridge
+  bridge-network:
+    external: true
