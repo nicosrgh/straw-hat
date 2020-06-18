@@ -17,6 +17,8 @@ type Config struct {
 	SandboxEmail    string `envconfig:"sandbox_email"`
 	SandboxPassword string `envconfig:"sandbox_password"`
 	SandboxRole     string `envconfig:"sandbox_role"`
+	MySqlDbDsn      string `envconfig:"mysql_db_dsn"`
+	MySqlDbName     string `envconfig:"mysql_db_name"`
 	ScheduleEvery   string `envconfig:"schedule_every"`
 	ScheduleTime    string `envconfig:"schedule_time"`
 	Version         string `envconfig:"version"`
@@ -26,7 +28,7 @@ type Config struct {
 var C Config
 
 func init() {
-	err := envconfig.Process("angelica_worker", &C)
+	err := envconfig.Process("straw_hat", &C)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
