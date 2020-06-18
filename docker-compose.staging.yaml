@@ -2,7 +2,7 @@ version: "2"
 
 services:
   s-straw-hat-worker:
-    image: gcr.io/staging-256810/s-angelica-worker:latest
+    image: gcr.io/poneglyph/s-angelica-worker:latest
     build:
       context: .
       dockerfile: dockerfiles/app.docker
