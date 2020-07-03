@@ -21,6 +21,7 @@ func InitMysql(conn string, name string) (*sql.DB, error) {
 		logger.Error(err.Error())
 		return nil, err
 	}
+	fmt.Println("database connected !")
 	return db, nil
 }
 
@@ -32,6 +33,17 @@ type MysqlDb struct {
 // MysqlStore :
 type MysqlStore interface {
 	Read(filter interface{}, opts options.FindOneOptions, collectionName string) *mongo.SingleResult
+}
+
+// Store :
+func (my *MysqlDb) Store(query string) (string, error) {
+	rows, err := my.Query(query)
+	if err != nil {
+		return "", err
+	}
+	defer rows.Close()
+
+	return "Success", nil
 }
 
 // Read :
