@@ -21,6 +21,7 @@ func Init() {
 
 		// dimension
 		transformer.GenderDimension(store)
+		transformer.TitleDimension(store)
 	})
 
 	c.Start()
