@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/nicosrgh/straw-hat/config"
 	"github.com/nicosrgh/straw-hat/lib/logger"
 
 	// mysql
@@ -14,15 +15,15 @@ import (
 )
 
 // InitMysql :
-func InitMysql(conn string, name string) (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s%s", conn, name)
+func InitMysql() (*MysqlDb, error) {
+	dsn := fmt.Sprintf("%s%s", config.C.MySqlDbDsn, config.C.MySqlDbName)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, err
 	}
 	fmt.Println("database connected !")
-	return db, nil
+	return &MysqlDb{db}, nil
 }
 
 // MysqlDb :
