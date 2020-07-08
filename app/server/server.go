@@ -20,10 +20,13 @@ func Init() {
 
 		// dimension
 		// transformer.GenderDimension()
-		// transformer.TitleDimension()
+		transformer.TitleDimension()
 
 		// source
-		transformer.EmployeeSource()
+		// transformer.EmployeeSource()
+
+		// datamart
+		transformer.EmployeeTitleDatamart()
 
 	})
 

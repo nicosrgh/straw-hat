@@ -87,6 +87,7 @@ func (my *MysqlDb) Read(query string) (string, error) {
 		return "", err
 	}
 
+	fmt.Println("string(jsonData): ", string(jsonData))
 	return string(jsonData), nil
 }
 

@@ -12,6 +12,7 @@ type Employee struct {
 	Title      string `json:"title" bson:"title"`
 	Birthdate  string `json:"birthdate" bson:"birthdate"`
 	JoinDate   string `json:"join_date" bson:"join_date"`
+	Count      string `json:"count" bson:"count"`
 }
 
 // SourceEmployee ...
@@ -27,4 +28,10 @@ type SourceEmployee struct {
 	Title      string `json:"title" bson:"title"`
 	Birthdate  string `json:"birthdate" bson:"birthdate"`
 	JoinDate   string `json:"join_date" bson:"join_date"`
+}
+
+// DatamartTitle ...
+type DatamartTitle struct {
+	ID        string `json:"id" bson:"id"`
+	TitleFact int    `json:"title_fact" bson:"title_fact"`
 }
