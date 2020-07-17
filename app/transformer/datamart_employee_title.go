@@ -19,7 +19,19 @@ func EmployeeTitleDatamart() {
 		logger.Error(err.Error())
 	}
 
-	query := "select count(id) count, title from employee group by title"
+	query := fmt.Sprintf(`
+	select 
+		count(id) count, 
+		title, 
+		day(join_date) AS day,
+		MONTH(join_date) AS month,
+		year(join_date) AS year
+	from employee 
+	group by 
+		title, 
+		day(join_date),
+		MONTH(join_date),
+		year(join_date)`)
 
 	res, err := conn.Read(query)
 	if err != nil {
@@ -39,8 +51,22 @@ func EmployeeTitleDatamart() {
 				logger.Error(err.Error())
 			}
 
-			queryExists := fmt.Sprintf("select * from ss_dimension_title where name = '%s'", title.Title)
+			day, err := strconv.Atoi(title.Day)
+			if err != nil {
+				logger.Error(err.Error())
+			}
 
+			month, err := strconv.Atoi(title.Month)
+			if err != nil {
+				logger.Error(err.Error())
+			}
+
+			year, err := strconv.Atoi(title.Year)
+			if err != nil {
+				logger.Error(err.Error())
+			}
+
+			queryExists := fmt.Sprintf(`select * from ss_dimension_title where name = '%s'`, title.Title)
 			res, err := conn.Read(queryExists)
 			if err != nil {
 				logger.Error(err.Error())
@@ -51,14 +77,43 @@ func EmployeeTitleDatamart() {
 				logger.Error(resErr.Error())
 			}
 
+			queryDateExists := fmt.Sprintf(`
+				select * from ss_dimension_time 
+				where day = %d
+					and month = %d
+					and year = %d`,
+				day,
+				month,
+				year,
+			)
+			fmt.Println("queryDateExists: ", queryDateExists)
+			resTime, err := conn.Read(queryDateExists)
+			if err != nil {
+				logger.Error(err.Error())
+			}
+
+			var dimTime []model.DimensionTime
+			if resErr := json.Unmarshal([]byte(resTime), &dimTime); resErr != nil {
+				logger.Error(resErr.Error())
+			}
+
+			fmt.Println("dimTime: ", dimTime)
+
 			if len(dimTitle) != 0 {
 				titleID, err := strconv.Atoi(dimTitle[0].ID)
 				if err != nil {
 					logger.Error(err.Error())
 				}
 
-				queryExists := fmt.Sprintf("select * from ss_datamart_title where title_id = '%d'", titleID)
-				fmt.Println("query exist datamart title: ", queryExists)
+				timeID, err := strconv.Atoi(dimTime[0].ID)
+				if err != nil {
+					logger.Error(err.Error())
+				}
+
+				queryExists := fmt.Sprintf(`
+					select * from ss_datamart_title where title_id = '%d'`,
+					titleID,
+				)
 				resEx, err := conn.Read(queryExists)
 				if err != nil {
 					logger.Error(err.Error())
@@ -68,16 +123,26 @@ func EmployeeTitleDatamart() {
 				if resErr := json.Unmarshal([]byte(resEx), &datamartTitle); resErr != nil {
 					logger.Error(resErr.Error())
 				}
-				fmt.Println("datamartTitle: ", datamartTitle)
 
-				queryStore := fmt.Sprintf("insert into ss_datamart_title (title_id, title_fact) values (%d, %d)",
-					titleID, cnt)
+				queryStore := fmt.Sprintf(`
+					INSERT INTO ss_datamart_title 
+					(
+						title_id,
+						time_id, 
+						title_fact
+					) 
+					VALUES (%d, %d, %d)`,
+					titleID, timeID, cnt)
+
 				if len(datamartTitle) > 0 {
-					queryStore = fmt.Sprintf("update ss_datamart_title set title_fact = %d where title_id = %d",
-						cnt, titleID)
+					queryStore = fmt.Sprintf(`
+						UPDATE ss_datamart_title 
+						SET title_fact = %d 
+						WHERE title_id = %d`,
+						cnt,
+						titleID,
+					)
 				}
-
-				fmt.Println("queryStore: ", queryStore)
 
 				_, errs := conn.Store(queryStore)
 				if errs != nil {

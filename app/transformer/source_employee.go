@@ -19,7 +19,7 @@ func EmployeeSource() {
 		logger.Error(err.Error())
 	}
 
-	queryLast := "select id, source_id from source_employee order by id desc limit 1"
+	queryLast := fmt.Sprintf(`select id, source_id from source_employee order by id desc limit 1`)
 
 	res, err := conn.Read(queryLast)
 	if err != nil {
@@ -60,8 +60,31 @@ func EmployeeSource() {
 				logger.Error(err.Error())
 			}
 
-			queryInsert := fmt.Sprintf("insert into source_employee (source_id, nip, fullname, status, gender, department, location, title, birthdate, join_date) values (%d, '%s', '%s', '%s', '%s', '%s', '%s','%s', '%s', '%s')",
-				ID, employee.NIP, employee.Fullname, employee.Status, employee.Gender, employee.Department, employee.Location, employee.Title, employee.Birthdate, employee.JoinDate)
+			queryInsert := fmt.Sprintf(
+				`insert into source_employee (
+				source_id, 
+				nip, 
+				fullname, 
+				status, 
+				gender, 
+				department, 
+				location, 
+				title, 
+				birthdate, 
+				join_date
+			) 
+			values (%d, '%s', '%s', '%s', '%s', '%s', '%s','%s', '%s', '%s')`,
+				ID,
+				employee.NIP,
+				employee.Fullname,
+				employee.Status,
+				employee.Gender,
+				employee.Department,
+				employee.Location,
+				employee.Title,
+				employee.Birthdate,
+				employee.JoinDate,
+			)
 			fmt.Println("queryInsert: ", queryInsert)
 
 			_, errs := conn.Store(queryInsert)

@@ -18,7 +18,7 @@ func GenderDimension() {
 		logger.Error(err.Error())
 	}
 
-	query := "select DISTINCT gender from employee;"
+	query := fmt.Sprintf(`select DISTINCT gender from employee`)
 
 	res, err := conn.Read(query)
 	if err != nil {
@@ -34,7 +34,7 @@ func GenderDimension() {
 	if length > 0 {
 		i := 0
 		for _, gender := range genders {
-			queryExists := fmt.Sprintf("select * from ss_dimension_gender where name = '%s'", gender.Gender)
+			queryExists := fmt.Sprintf(`select * from ss_dimension_gender where name = '%s'`, gender.Gender)
 
 			res, err := conn.Read(queryExists)
 			if err != nil {
@@ -47,7 +47,7 @@ func GenderDimension() {
 			}
 
 			if len(dimGenders) <= 0 {
-				queryStore := fmt.Sprintf("insert into ss_dimension_gender (name) values ('%s')", gender.Gender)
+				queryStore := fmt.Sprintf(`insert into ss_dimension_gender (name) values ('%s')`, gender.Gender)
 				_, err := conn.Store(queryStore)
 				if err != nil {
 					logger.Error(err.Error())

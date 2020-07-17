@@ -12,6 +12,10 @@ type Employee struct {
 	Title      string `json:"title" bson:"title"`
 	Birthdate  string `json:"birthdate" bson:"birthdate"`
 	JoinDate   string `json:"join_date" bson:"join_date"`
+	Day        string `json:"day" bson:"day"`
+	Week       string `json:"week" bson:"week"`
+	Month      string `json:"month" bson:"month"`
+	Year       string `json:"year" bson:"year"`
 	Count      string `json:"count" bson:"count"`
 }
 
