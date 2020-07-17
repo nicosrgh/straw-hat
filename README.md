@@ -1,7 +1,5 @@
 # Straw Hat
 
-> Proposed grpc based service, no name been decided. This project is still in proposal stage, any critic and suggestion all very welcomed including but not limited to project name, function naming, folder structure etc. please refer to CONTRIBUTING.md.
-
 ## Prerequisite
 
 - Install [go](https://golang.org/doc/install) in local machine for convenience development experience (auto complete, code sugestion, etc)
