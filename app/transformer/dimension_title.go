@@ -34,7 +34,7 @@ func TitleDimension() {
 	if length > 0 {
 		i := 0
 		for _, employee := range employees {
-			queryExists := fmt.Sprintf("select * from ss_title_dimension where name = '%s'", employee.Title)
+			queryExists := fmt.Sprintf("select * from ss_dimension_title where name = '%s'", employee.Title)
 
 			res, err := conn.Read(queryExists)
 			if err != nil {
@@ -47,7 +47,7 @@ func TitleDimension() {
 			}
 
 			if len(dimGenders) <= 0 {
-				queryStore := fmt.Sprintf("insert into ss_title_dimension (name) values ('%s')", employee.Title)
+				queryStore := fmt.Sprintf("insert into ss_dimension_title (name) values ('%s')", employee.Title)
 				_, err := conn.Store(queryStore)
 				if err != nil {
 					logger.Error(err.Error())

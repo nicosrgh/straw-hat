@@ -19,11 +19,11 @@ func Init() {
 		// run the schedule
 
 		// dimension
-		// transformer.GenderDimension()
+		transformer.GenderDimension()
 		transformer.TitleDimension()
 
 		// source
-		// transformer.EmployeeSource()
+		transformer.EmployeeSource()
 
 		// datamart
 		transformer.EmployeeTitleDatamart()

@@ -39,8 +39,7 @@ func EmployeeTitleDatamart() {
 				logger.Error(err.Error())
 			}
 
-			queryExists := fmt.Sprintf("select * from ss_title_dimension where name = '%s'", title.Title)
-			fmt.Println("queryExists tidim", queryExists)
+			queryExists := fmt.Sprintf("select * from ss_dimension_title where name = '%s'", title.Title)
 
 			res, err := conn.Read(queryExists)
 			if err != nil {
@@ -51,7 +50,6 @@ func EmployeeTitleDatamart() {
 			if resErr := json.Unmarshal([]byte(res), &dimTitle); resErr != nil {
 				logger.Error(resErr.Error())
 			}
-			fmt.Println("dimTItle: ", dimTitle)
 
 			if len(dimTitle) != 0 {
 				titleID, err := strconv.Atoi(dimTitle[0].ID)
