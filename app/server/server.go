@@ -27,6 +27,7 @@ func Init() {
 
 		// datamart
 		transformer.EmployeeTitleDatamart()
+		transformer.EmployeeTotalDatamart()
 
 	})
 

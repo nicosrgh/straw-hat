@@ -38,7 +38,7 @@ func EmployeeTitleDatamart() {
 		logger.Error(err.Error())
 	}
 
-	var titles []model.Employee
+	var titles []model.SourceEmployee
 	if resErr := json.Unmarshal([]byte(res), &titles); resErr != nil {
 		logger.Error(resErr.Error())
 	}
@@ -46,7 +46,7 @@ func EmployeeTitleDatamart() {
 	length := len(titles)
 	if length > 0 {
 		for _, title := range titles {
-			cnt, err := strconv.Atoi(title.Count)
+			cnt, err := strconv.Atoi(title.TotalEmployee)
 			if err != nil {
 				logger.Error(err.Error())
 			}
