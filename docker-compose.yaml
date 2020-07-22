@@ -2,7 +2,7 @@ version: "2"
 
 services:
   p-straw-hat:
-    image: gcr.io/staging-256810/p-straw-hat:latest
+    image: gcr.io/doctor-tribehired/team6app:latest
     build:
       context: .
       dockerfile: dockerfiles/app.docker
