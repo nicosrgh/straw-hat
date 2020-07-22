@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/nicosrgh/straw-hat/app/transformer"
 	"github.com/nicosrgh/straw-hat/config"
 	"github.com/robfig/cron"
 )
@@ -16,6 +17,18 @@ func Init() {
 	// store := repository.Init()
 	c.AddFunc(fmt.Sprintf("%s %s", config.C.ScheduleEvery, config.C.ScheduleTime), func() {
 		// run the schedule
+
+		// dimension
+		transformer.GenderDimension()
+		transformer.TitleDimension()
+
+		// source
+		transformer.EmployeeSource()
+
+		// datamart
+		transformer.EmployeeTitleDatamart()
+		transformer.EmployeeTotalDatamart()
+
 	})
 
 	c.Start()

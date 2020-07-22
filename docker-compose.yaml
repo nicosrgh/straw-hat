@@ -2,7 +2,11 @@ version: "2"
 
 services:
   p-straw-hat:
+<<<<<<< HEAD
     image: gcr.io/doctor-tribehired/team6app:latest
+=======
+    image: gcr.io/poneglyph/p-straw-hat:latest
+>>>>>>> 23674a658bfd40ec6f4dd2cbb00030f4342cb55d
     build:
       context: .
       dockerfile: dockerfiles/app.docker

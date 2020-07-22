@@ -3,7 +3,7 @@ version: "2"
 services:
   d-straw-hat:
     container_name: "d-straw-hat"
-    image: gcr.io/straw-hat/d-straw-hat:latest
+    image: gcr.io/poneglyph/d-straw-hat:latest
     build:
       context: .
       dockerfile: ./dockerfiles/app.docker.dev
