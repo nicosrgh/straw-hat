@@ -1,9 +1,9 @@
 # Straw Hat
-<<<<<<< HEAD
 
 > Proposed grpc based service, no name been decided. This project is still in proposal stage, any critic and suggestion all very welcomed including but not limited to project name, function naming, folder structure etc. please refer to CONTRIBUTING.md.
-=======
->>>>>>> master
+
+
+> Proposed grpc based service, no name been decided. This project is still in proposal stage, any critic and suggestion all very welcomed including but not limited to project name, function naming, folder structure etc. please refer to CONTRIBUTING.md.
 
 ## Prerequisite
 
