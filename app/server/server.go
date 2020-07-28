@@ -21,9 +21,13 @@ func Init() {
 		// dimension
 		transformer.GenderDimension()
 		transformer.TitleDimension()
+		transformer.LocationDimension()
 
 		// source
 		transformer.EmployeeSource()
+
+		// fact
+		transformer.FactEmployeeLocation()
 
 		// datamart
 		transformer.EmployeeTitleDatamart()

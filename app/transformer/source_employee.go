@@ -85,7 +85,6 @@ func EmployeeSource() {
 				employee.Birthdate,
 				employee.JoinDate,
 			)
-			fmt.Println("queryInsert: ", queryInsert)
 
 			_, errs := conn.Store(queryInsert)
 			if errs != nil {
