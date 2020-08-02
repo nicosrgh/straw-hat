@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: dockerfiles/app.docker
     env_file: .env
-    container_name: "p-straw-hat"
+    container_name: "team6app"
     working_dir: /usr/src/app
     ports:
-      - "50050:50050"
+      - "5000:50050"
