@@ -18,20 +18,27 @@ func Init() {
 	c.AddFunc(fmt.Sprintf("%s %s", config.C.ScheduleEvery, config.C.ScheduleTime), func() {
 		// run the schedule
 
-		// dimension
-		transformer.GenderDimension()
+		// dimension employee
 		transformer.TitleDimension()
+		transformer.GenderDimension()
 		transformer.LocationDimension()
+		transformer.DepartmentDimension()
+		transformer.StatusDimension()
+
+		// dimension transaction
+		transformer.ProductDimension()
+		transformer.PartnerDimension()
+		transformer.ClientDimension()
 
 		// source
-		transformer.EmployeeSource()
+		// transformer.EmployeeSource()
 
 		// fact
-		transformer.FactEmployeeLocation()
+		// transformer.FactEmployeeLocation()
 
 		// datamart
-		transformer.EmployeeTitleDatamart()
-		transformer.EmployeeTotalDatamart()
+		// transformer.EmployeeTitleDatamart()
+		// transformer.EmployeeTotalDatamart()
 
 	})
 

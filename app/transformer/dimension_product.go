@@ -11,9 +11,9 @@ import (
 	"github.com/nicosrgh/straw-hat/model"
 )
 
-// TitleDimension ...
-func TitleDimension() {
-	fmt.Println("populate dimension title ...")
+// ProductDimension ...
+func ProductDimension() {
+	fmt.Println("populate dimension product ...")
 	conn, err := repository.InitMysql()
 	if err != nil {
 		logger.Error(err.Error())
@@ -22,7 +22,7 @@ func TitleDimension() {
 	// get query latest
 
 	queryLast := fmt.Sprintf(`SELECT * FROM last_updated 
-		WHERE action = 'ss_dimension_title'
+		WHERE action = 'ss_dimension_product'
 		ORDER BY created_at DESC
 		LIMIT 1`)
 
@@ -44,35 +44,37 @@ func TitleDimension() {
 		lastID = rs
 	}
 
-	query := fmt.Sprintf(`select * from title WHERE id > %d`, lastID)
+	query := fmt.Sprintf(`select * from product WHERE id > %d`, lastID)
 
 	res, err := conn.Read(query)
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	var titles []model.Title
-	if resErr := json.Unmarshal([]byte(res), &titles); resErr != nil {
+	var products []model.Product
+	if resErr := json.Unmarshal([]byte(res), &products); resErr != nil {
 		logger.Error(resErr.Error())
 	}
 
-	length := len(titles)
+	length := len(products)
 	if length > 0 {
 		i := 0
-		for _, title := range titles {
-			queryStore := fmt.Sprintf(`insert into ss_dimension_title (name) values ('%s')`, title.Name)
+		for _, product := range products {
+			queryStore := fmt.Sprintf(`
+			insert into ss_dimension_product 
+			(name, revenue_category) values ('%s', '%s')`,
+				product.Name, product.RevenueCategory)
 			_, err := conn.Store(queryStore)
 			if err != nil {
 				logger.Error(err.Error())
 			}
-
 			i++
 		}
-		fmt.Println("Inserted dimension title: ", i)
+		fmt.Println("Inserted dimension product: ", i)
 
 		queryGetLastID := fmt.Sprintf(`
 		SELECT id
-		FROM title
+		FROM product
 		WHERE id > %d
 		ORDER BY id DESC
 		LIMIT 1`,
@@ -80,17 +82,17 @@ func TitleDimension() {
 
 		resGetLast, err := conn.Read(queryGetLastID)
 		if err != nil {
-			logger.Error("[GET LAST TITLE]", err.Error())
+			logger.Error("[GET LAST PRODUCT]", err.Error())
 		}
 
 		var lastTitle []model.Title
 		if resErr := json.Unmarshal([]byte(resGetLast), &lastTitle); resErr != nil {
-			logger.Error("[LAST TITLE UNMARSHAL]", resErr.Error())
+			logger.Error("[LAST PRODUCT UNMARSHAL]", resErr.Error())
 		}
 
 		last, err := strconv.Atoi(lastTitle[0].ID)
 		if err != nil {
-			logger.Error("[LAST TITLE UNMARSHAL] failed convert: ", err.Error())
+			logger.Error("[LAST PRODUCT UNMARSHAL] failed convert: ", err.Error())
 		}
 
 		now := time.Now()
@@ -98,16 +100,16 @@ func TitleDimension() {
 		queryUpdated := fmt.Sprintf(`
 			INSERT INTO last_updated (action, last_id, created_at)
 			VALUE('%s', %d, '%s')
-		`, "ss_dimension_title", last, now.Format("2006-01-02 15:04:05"))
+		`, "ss_dimension_product", last, now.Format("2006-01-02 15:04:05"))
 
 		_, errs := conn.Store((queryUpdated))
 		if errs != nil {
 			logger.Error("[INSERT INTO LAST UPDATED]", errs.Error())
 		}
 
-		fmt.Println("[DIMENSION TITLE]: Success update data")
+		fmt.Println("[DIMENSION PRODUCT]: Success update data")
 	} else {
-		fmt.Println("[DIMENSION TITLE]: There is no new data")
+		fmt.Println("[DIMENSION PRODUCT]: There is no new data")
 	}
 
 	conn.Close()
