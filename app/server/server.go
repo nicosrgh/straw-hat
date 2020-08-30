@@ -34,10 +34,15 @@ func Init() {
 		// transformer.EmployeeSource()
 		// transformer.TransactionSource()
 
-		// fact
+		// fact employee
 		// transformer.FactEmployeeGender()
 		// transformer.FactEmployeeLocation()
-		transformer.FactEmployeeStatus()
+		// transformer.FactEmployeeStatus()
+
+		// fact transaction
+		// transformer.FactTransactionClient()
+		// transformer.FactTransactionProduct()
+		transformer.FactTransactionPartner()
 
 		// datamart
 		// transformer.EmployeeTitleDatamart()

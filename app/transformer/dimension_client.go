@@ -45,7 +45,12 @@ func ClientDimension() {
 	}
 
 	query := fmt.Sprintf(`
-		SELECT client.id, client.name, partner.name 
+		SELECT client.id, client.name, 
+		CASE WHEN partner.name IS NOT NULL 
+			THEN partner.name 
+			ELSE 'INTERNAL' 
+			END
+		AS partner
 		FROM client 
 		LEFT JOIN partner ON partner.id = client.department_id
 		WHERE client.id > %d`,

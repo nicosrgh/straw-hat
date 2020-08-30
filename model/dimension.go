@@ -24,6 +24,26 @@ type DimensionStatus struct {
 	Name string `json:"name" bson:"name"`
 }
 
+// DimensionPartner ...
+type DimensionPartner struct {
+	ID   string `json:"id" bson:"id"`
+	Name string `json:"name" bson:"name"`
+}
+
+// DimensionClient ...
+type DimensionClient struct {
+	ID      string `json:"id" bson:"id"`
+	Name    string `json:"name" bson:"name"`
+	Partner string `json:"partner" bson:"partner"`
+}
+
+// DimensionProduct ...
+type DimensionProduct struct {
+	ID              string `json:"id" bson:"id"`
+	Name            string `json:"name" bson:"name"`
+	RevenueCategory string `json:"revenue_category" bson:"revenue_category"`
+}
+
 // DimensionTime ...
 type DimensionTime struct {
 	ID          string `json:"id" bson:"id"`
