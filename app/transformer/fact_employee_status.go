@@ -11,9 +11,9 @@ import (
 	"github.com/nicosrgh/straw-hat/model"
 )
 
-// FactEmployeeLocation ...
-func FactEmployeeLocation() {
-	fmt.Println("populate fact employee location ...")
+// FactEmployeeStatus ...
+func FactEmployeeStatus() {
+	fmt.Println("populate fact employee status ...")
 	conn, err := repository.InitMysql()
 	if err != nil {
 		logger.Error(err.Error())
@@ -22,7 +22,7 @@ func FactEmployeeLocation() {
 	// get query latest
 
 	queryLast := fmt.Sprintf(`SELECT * FROM last_updated 
-		WHERE action = 'fact_employee_location'
+		WHERE action = 'fact_employee_status'
 		ORDER BY created_at DESC
 		LIMIT 1`)
 
@@ -47,6 +47,8 @@ func FactEmployeeLocation() {
 	query := fmt.Sprintf(`
 	SELECT 
 		COUNT(id) AS count,
+		status_id,
+		status,
 		location_id,
 		location,
 		join_date,
@@ -59,35 +61,36 @@ func FactEmployeeLocation() {
 		DAY(join_date),
 		MONTH(join_date),
 		YEAR(join_date),
-		location_id`, lastID)
+		location_id,
+		status_id`, lastID)
 
 	res, err := conn.Read(query)
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	var factEmployeeLocation []model.FactLocationEmployee
-	if resErr := json.Unmarshal([]byte(res), &factEmployeeLocation); resErr != nil {
+	var factEmployeeStatus []model.FactStatusEmployee
+	if resErr := json.Unmarshal([]byte(res), &factEmployeeStatus); resErr != nil {
 		logger.Error(resErr.Error())
 	}
 
-	length := len(factEmployeeLocation)
+	length := len(factEmployeeStatus)
 	if length > 0 {
 		i := 0
-		for _, location := range factEmployeeLocation {
-			count, err := strconv.Atoi(location.Count)
+		for _, status := range factEmployeeStatus {
+			count, err := strconv.Atoi(status.Count)
 			if err != nil {
 				logger.Error("[Count to INT] failed convert: ", err.Error())
 			}
-			day, err := strconv.Atoi(location.Day)
+			day, err := strconv.Atoi(status.Day)
 			if err != nil {
 				logger.Error("[Day to INT] failed convert: ", err.Error())
 			}
-			month, err := strconv.Atoi(location.Month)
+			month, err := strconv.Atoi(status.Month)
 			if err != nil {
 				logger.Error("[Day to INT] failed convert: ", err.Error())
 			}
-			year, err := strconv.Atoi(location.Year)
+			year, err := strconv.Atoi(status.Year)
 			if err != nil {
 				logger.Error("[Day to INT] failed convert: ", err.Error())
 			}
@@ -115,7 +118,7 @@ func FactEmployeeLocation() {
 			// GET LOCATION DIMENSION
 			queryLocationDimension := fmt.Sprintf(`
 				SELECT * FROM ss_dimension_location
-				WHERE name = '%s'`, location.Location)
+				WHERE name = '%s'`, status.Location)
 
 			resDimensionLocation, err := conn.Read(queryLocationDimension)
 			if err != nil {
@@ -130,11 +133,29 @@ func FactEmployeeLocation() {
 				logger.Error("[ERROR DIMENSION TIME]", err.Error())
 			}
 
+			// GET STATUS DIMENSION
+			queryStatusDimension := fmt.Sprintf(`
+				SELECT * FROM ss_dimension_status
+				WHERE name = '%s'`, status.Location)
+
+			resDimensionStatus, err := conn.Read(queryStatusDimension)
+			if err != nil {
+				logger.Error(err.Error())
+			}
+			var statusDim []model.DimensionStatus
+			if resErr := json.Unmarshal([]byte(resDimensionStatus), &statusDim); resErr != nil {
+				logger.Error(resErr.Error())
+			}
+			dimStatusID, err := strconv.Atoi(locationDim[0].ID)
+			if err != nil {
+				logger.Error("[ERROR DIMENSION TIME]", err.Error())
+			}
+
 			queryStore := fmt.Sprintf(`
-				INSERT INTO fact_employee_location 
-				(time_id, location_id, total_employee) 
-				values (%d, %d, %d)`,
-				dimTimeID, dimLocationID, count)
+				INSERT INTO fact_employee_status 
+				(time_id, location_id, status_id, total_employee) 
+				values (%d, %d, %d, %d)`,
+				dimTimeID, dimLocationID, dimStatusID, count)
 
 			result, err := conn.Store(queryStore)
 			if err != nil {
@@ -143,7 +164,7 @@ func FactEmployeeLocation() {
 			logger.Info(result)
 			i++
 		}
-		fmt.Println("Inserted fact employee location: ", i)
+		fmt.Println("Inserted fact employee status: ", i)
 
 		queryGetLastID := fmt.Sprintf(`
 		SELECT id
@@ -155,17 +176,17 @@ func FactEmployeeLocation() {
 
 		resGetLast, err := conn.Read(queryGetLastID)
 		if err != nil {
-			logger.Error("[GET LAST LOCATION]", err.Error())
+			logger.Error("[GET LAST STATUS]", err.Error())
 		}
 
 		var lastEmployee []model.SourceEmployee
 		if resErr := json.Unmarshal([]byte(resGetLast), &lastEmployee); resErr != nil {
-			logger.Error("[LAST LOCATION UNMARSHAL]", resErr.Error())
+			logger.Error("[LAST STATUS UNMARSHAL]", resErr.Error())
 		}
 
 		last, err := strconv.Atoi(lastEmployee[0].ID)
 		if err != nil {
-			logger.Error("[LAST LOCATION UNMARSHAL] failed convert: ", err.Error())
+			logger.Error("[LAST STATUS UNMARSHAL] failed convert: ", err.Error())
 		}
 
 		now := time.Now()
@@ -173,16 +194,16 @@ func FactEmployeeLocation() {
 		queryUpdated := fmt.Sprintf(`
 			INSERT INTO last_updated (action, last_id, created_at)
 			VALUE('%s', %d, '%s')
-		`, "fact_employee_location", last, now.Format("2006-01-02 15:04:05"))
+		`, "fact_employee_status", last, now.Format("2006-01-02 15:04:05"))
 
 		_, errs := conn.Store((queryUpdated))
 		if errs != nil {
 			logger.Error("[INSERT INTO LAST UPDATED]", errs.Error())
 		}
 
-		fmt.Println("[FACT EMPLOYEE LOCATION]: Success update data")
+		fmt.Println("[FACT EMPLOYEE STATUS]: Success update data")
 	} else {
-		fmt.Println("[FACT EMPLOYEE LOCATION]: There is no new data")
+		fmt.Println("[FACT EMPLOYEE STATUS]: There is no new data")
 	}
 
 	conn.Close()

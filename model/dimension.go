@@ -18,6 +18,12 @@ type DimensionLocation struct {
 	Name string `json:"name" bson:"name"`
 }
 
+// DimensionStatus ...
+type DimensionStatus struct {
+	ID   string `json:"id" bson:"id"`
+	Name string `json:"name" bson:"name"`
+}
+
 // DimensionTime ...
 type DimensionTime struct {
 	ID          string `json:"id" bson:"id"`
