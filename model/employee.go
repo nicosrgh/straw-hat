@@ -2,16 +2,21 @@ package model
 
 // Employee ...
 type Employee struct {
-	ID         string `json:"id" bson:"id"`
-	NIP        string `json:"nip" bson:"nip"`
-	Fullname   string `json:"fullname" bson:"fullname"`
-	Status     string `json:"status" bson:"status"`
-	Gender     string `json:"gender" bson:"gender"`
-	Department string `json:"department" bson:"department"`
-	Location   string `json:"location" bson:"location"`
-	Title      string `json:"title" bson:"title"`
-	Birthdate  string `json:"birthdate" bson:"birthdate"`
-	JoinDate   string `json:"join_date" bson:"join_date"`
+	ID           string `json:"id" bson:"id"`
+	NIP          string `json:"nip" bson:"nip"`
+	Fullname     string `json:"fullname" bson:"fullname"`
+	StatusID     string `json:"status_id" bson:"status_id"`
+	Status       string `json:"status" bson:"status"`
+	GenderID     string `json:"gender_id" bson:"gender_id"`
+	Gender       string `json:"gender" bson:"gender"`
+	DepartmentID string `json:"department_id" bson:"department_id"`
+	Department   string `json:"department" bson:"department"`
+	LocationID   string `json:"location_id" bson:"location_id"`
+	Location     string `json:"location" bson:"location"`
+	TitleID      string `json:"title_id" bson:"title_id"`
+	Title        string `json:"title" bson:"title"`
+	Birthdate    string `json:"birthdate" bson:"birthdate"`
+	JoinDate     string `json:"join_date" bson:"join_date"`
 }
 
 // SourceEmployee ...

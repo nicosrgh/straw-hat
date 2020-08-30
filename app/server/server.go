@@ -31,7 +31,8 @@ func Init() {
 		transformer.ClientDimension()
 
 		// source
-		// transformer.EmployeeSource()
+		transformer.EmployeeSource()
+		transformer.TransactionSource()
 
 		// fact
 		// transformer.FactEmployeeLocation()

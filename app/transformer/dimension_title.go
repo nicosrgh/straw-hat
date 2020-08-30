@@ -19,8 +19,7 @@ func TitleDimension() {
 		logger.Error(err.Error())
 	}
 
-	// get query latest
-
+	// QUERY GET LATEST
 	queryLast := fmt.Sprintf(`SELECT * FROM last_updated 
 		WHERE action = 'ss_dimension_title'
 		ORDER BY created_at DESC
