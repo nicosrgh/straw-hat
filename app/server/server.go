@@ -19,34 +19,30 @@ func Init() {
 		// run the schedule
 
 		// dimension employee
-		// transformer.TitleDimension()
-		// transformer.GenderDimension()
-		// transformer.LocationDimension()
-		// transformer.DepartmentDimension()
-		// transformer.StatusDimension()
+		transformer.TitleDimension()
+		transformer.GenderDimension()
+		transformer.LocationDimension()
+		transformer.DepartmentDimension()
+		transformer.StatusDimension()
 
 		// dimension transaction
-		// transformer.ProductDimension()
-		// transformer.PartnerDimension()
-		// transformer.ClientDimension()
+		transformer.ProductDimension()
+		transformer.PartnerDimension()
+		transformer.ClientDimension()
 
 		// source
-		// transformer.EmployeeSource()
-		// transformer.TransactionSource()
+		transformer.EmployeeSource()
+		transformer.TransactionSource()
 
 		// fact employee
-		// transformer.FactEmployeeGender()
-		// transformer.FactEmployeeLocation()
-		// transformer.FactEmployeeStatus()
+		transformer.FactEmployeeGender()
+		transformer.FactEmployeeLocation()
+		transformer.FactEmployeeStatus()
 
 		// fact transaction
-		// transformer.FactTransactionClient()
-		// transformer.FactTransactionProduct()
+		transformer.FactTransactionClient()
+		transformer.FactTransactionProduct()
 		transformer.FactTransactionPartner()
-
-		// datamart
-		// transformer.EmployeeTitleDatamart()
-		// transformer.EmployeeTotalDatamart()
 
 	})
 
