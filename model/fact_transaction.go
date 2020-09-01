@@ -3,6 +3,7 @@ package model
 // FactTransactionClient ...
 type FactTransactionClient struct {
 	Count     string `json:"count" bson:"count"`
+	Amount    string `json:"amount" bson:"amount"`
 	ClientID  string `json:"client_id" bson:"client_id"`
 	Client    string `json:"client" bson:"client"`
 	CreatedAt string `json:"created_date" bson:"created_date"`
@@ -14,6 +15,7 @@ type FactTransactionClient struct {
 // FactTransactionProduct ...
 type FactTransactionProduct struct {
 	Count     string `json:"count" bson:"count"`
+	Amount    string `json:"amount" bson:"amount"`
 	ProductID string `json:"product_id" bson:"product_id"`
 	Product   string `json:"product" bson:"product"`
 	CreatedAt string `json:"created_date" bson:"created_date"`
@@ -25,6 +27,7 @@ type FactTransactionProduct struct {
 // FactTransactionPartner ...
 type FactTransactionPartner struct {
 	Count     string `json:"count" bson:"count"`
+	Amount    string `json:"amount" bson:"amount"`
 	PartnerID string `json:"partner_id" bson:"partner_id"`
 	Partner   string `json:"partner" bson:"partner"`
 	CreatedAt string `json:"created_date" bson:"created_date"`

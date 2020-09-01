@@ -46,6 +46,7 @@ func FactTransactionPartner() {
 	query := fmt.Sprintf(`
 	SELECT 
 		COUNT(id) AS count,
+		SUM(amount) AS amount,
 		department AS partner,
 		created_at,
 		DAY(created_at) AS day,
@@ -74,6 +75,10 @@ func FactTransactionPartner() {
 		i := 0
 		for _, partner := range factTransactionPartner {
 			count, err := strconv.Atoi(partner.Count)
+			if err != nil {
+				logger.Error("[Count to INT] failed convert: ", err.Error())
+			}
+			amount, err := strconv.Atoi(partner.Amount)
 			if err != nil {
 				logger.Error("[Count to INT] failed convert: ", err.Error())
 			}
@@ -131,9 +136,9 @@ func FactTransactionPartner() {
 
 			queryStore := fmt.Sprintf(`
 				INSERT INTO fact_transaction_partner 
-				(time_id, partner_id, total_employee) 
-				values (%d, %d, %d)`,
-				dimTimeID, dimPartnerID, count)
+				(time_id, partner_id, total_transaction, total_amount) 
+				values (%d, %d, %d, %d)`,
+				dimTimeID, dimPartnerID, count, amount)
 
 			result, err := conn.Store(queryStore)
 			if err != nil {

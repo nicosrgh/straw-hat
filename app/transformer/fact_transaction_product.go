@@ -46,6 +46,7 @@ func FactTransactionProduct() {
 	query := fmt.Sprintf(`
 	SELECT 
 		COUNT(id) AS count,
+		SUM(amount) AS amount,
 		product_id,
 		product,
 		created_at,
@@ -75,6 +76,10 @@ func FactTransactionProduct() {
 		i := 0
 		for _, product := range factTransactionProduct {
 			count, err := strconv.Atoi(product.Count)
+			if err != nil {
+				logger.Error("[Count to INT] failed convert: ", err.Error())
+			}
+			amount, err := strconv.Atoi(product.Amount)
 			if err != nil {
 				logger.Error("[Count to INT] failed convert: ", err.Error())
 			}
@@ -111,7 +116,7 @@ func FactTransactionProduct() {
 				logger.Error("[ERROR DIMENSION TIME]", err.Error())
 			}
 
-			// GET CLIENT DIMENSION
+			// GET PRODUCT DIMENSION
 			queryProductDimension := fmt.Sprintf(`
 				SELECT * FROM ss_dimension_product
 				WHERE name = '%s'`, product.Product)
@@ -133,9 +138,9 @@ func FactTransactionProduct() {
 
 			queryStore := fmt.Sprintf(`
 				INSERT INTO fact_transaction_product 
-				(time_id, product_id, total_employee) 
-				values (%d, %d, %d)`,
-				dimTimeID, dimProductID, count)
+				(time_id, product_id, total_transaction, total_amount) 
+				values (%d, %d, %d, %d)`,
+				dimTimeID, dimProductID, count, amount)
 
 			result, err := conn.Store(queryStore)
 			if err != nil {
@@ -144,7 +149,7 @@ func FactTransactionProduct() {
 			logger.Info(result)
 			i++
 		}
-		fmt.Println("Inserted fact employee product: ", i)
+		fmt.Println("Inserted fact transaction product: ", i)
 
 		queryGetLastID := fmt.Sprintf(`
 		SELECT id
@@ -156,17 +161,17 @@ func FactTransactionProduct() {
 
 		resGetLast, err := conn.Read(queryGetLastID)
 		if err != nil {
-			logger.Error("[GET LAST CLIENT]", err.Error())
+			logger.Error("[GET LAST PRODUCT]", err.Error())
 		}
 
 		var lastEmployee []model.SourceEmployee
 		if resErr := json.Unmarshal([]byte(resGetLast), &lastEmployee); resErr != nil {
-			logger.Error("[LAST CLIENT UNMARSHAL]", resErr.Error())
+			logger.Error("[LAST PRODUCT UNMARSHAL]", resErr.Error())
 		}
 
 		last, err := strconv.Atoi(lastEmployee[0].ID)
 		if err != nil {
-			logger.Error("[LAST CLIENT UNMARSHAL] failed convert: ", err.Error())
+			logger.Error("[LAST PRODUCT UNMARSHAL] failed convert: ", err.Error())
 		}
 
 		now := time.Now()
@@ -181,9 +186,9 @@ func FactTransactionProduct() {
 			logger.Error("[INSERT INTO LAST UPDATED]", errs.Error())
 		}
 
-		fmt.Println("[FACT TRANSCATION CLIENT]: Success update data")
+		fmt.Println("[FACT TRANSCATION PRODUCT]: Success update data")
 	} else {
-		fmt.Println("[FACT TRANSCATION CLIENT]: There is no new data")
+		fmt.Println("[FACT TRANSCATION PRODUCT]: There is no new data")
 	}
 
 	conn.Close()

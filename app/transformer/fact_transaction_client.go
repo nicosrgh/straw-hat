@@ -46,6 +46,7 @@ func FactTransactionClient() {
 	query := fmt.Sprintf(`
 	SELECT 
 		COUNT(id) AS count,
+		SUM(amount) AS amount,
 		client_id,
 		client,
 		created_at,
@@ -75,6 +76,10 @@ func FactTransactionClient() {
 		i := 0
 		for _, client := range factTransactionClient {
 			count, err := strconv.Atoi(client.Count)
+			if err != nil {
+				logger.Error("[Count to INT] failed convert: ", err.Error())
+			}
+			amount, err := strconv.Atoi(client.Amount)
 			if err != nil {
 				logger.Error("[Count to INT] failed convert: ", err.Error())
 			}
@@ -118,26 +123,22 @@ func FactTransactionClient() {
 
 			resDimensionClient, err := conn.Read(queryClientDimension)
 			if err != nil {
-				fmt.Println("1")
 				logger.Error(err.Error())
 			}
 			var clientDim []model.DimensionClient
-			fmt.Println("clientDim: ", clientDim)
 			if resErr := json.Unmarshal([]byte(resDimensionClient), &clientDim); resErr != nil {
-				fmt.Println("1")
 				logger.Error(resErr.Error())
 			}
 			dimClientID, err := strconv.Atoi(clientDim[0].ID)
 			if err != nil {
-				fmt.Println("1")
 				logger.Error("[ERROR DIMENSION TIME]", err.Error())
 			}
 
 			queryStore := fmt.Sprintf(`
 				INSERT INTO fact_transaction_client 
-				(time_id, client_id, total_employee) 
-				values (%d, %d, %d)`,
-				dimTimeID, dimClientID, count)
+				(time_id, client_id, total_transaction, total_amount) 
+				values (%d, %d, %d, %d)`,
+				dimTimeID, dimClientID, count, amount)
 
 			result, err := conn.Store(queryStore)
 			if err != nil {
@@ -146,7 +147,7 @@ func FactTransactionClient() {
 			logger.Info(result)
 			i++
 		}
-		fmt.Println("Inserted fact employee client: ", i)
+		fmt.Println("Inserted fact transaction client: ", i)
 
 		queryGetLastID := fmt.Sprintf(`
 		SELECT id
@@ -183,9 +184,9 @@ func FactTransactionClient() {
 			logger.Error("[INSERT INTO LAST UPDATED]", errs.Error())
 		}
 
-		fmt.Println("[FACT EMPLOYEE LOCATION]: Success update data")
+		fmt.Println("[FACT TRANSACTION CLIENT]: Success update data")
 	} else {
-		fmt.Println("[FACT EMPLOYEE LOCATION]: There is no new data")
+		fmt.Println("[FACT TRANSACTION CLIENT]: There is no new data")
 	}
 
 	conn.Close()
